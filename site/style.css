@@ -163,6 +163,20 @@ pre {
     text-decoration: underline;
 }
 
+.repo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 24px;
+    padding: 10px 0;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.repo-link:hover .repo-link__text {
+    text-decoration: underline;
+}
+
 .menubar {
     position: relative;
     margin-left: auto;
@@ -828,6 +842,15 @@ kbd {
 
     .masthead__nav a:not(:nth-child(2), :nth-child(3)) {
         display: none;
+    }
+
+    .repo-link__text {
+        display: none;
+    }
+
+    .repo-link svg {
+        width: 20px;
+        height: 20px;
     }
 
     /* On a phone the menu opens from the status item as a sheet across the screen. */
