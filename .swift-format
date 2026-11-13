@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "lineLength": 100,
+  "indentation": { "spaces": 4 },
+  "rules": {
+    "AlwaysUseLowerCamelCase": true,
+    "NeverForceUnwrap": true,
+    "NeverUseForceTry": true,
+    "NeverUseImplicitlyUnwrappedOptionals": true,
+    "OrderedImports": true,
+    "UseLetInEveryBoundCaseVariable": true
+  }
+}

@@ -1,0 +1,45 @@
+name: Bug report
+description: Something Untunnel does is wrong or broken.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach recordings of your voice or anyone else's. The doctor output below holds
+        device names and numbers only; read it before you paste.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and any message Untunnel printed, word for word.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The commands you ran or the menu items you chose, in order.
+      placeholder: |
+        1. Run `untunnel setup`
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `untunnel doctor --markdown`
+      description: Run it in Terminal and paste everything it prints.
+      render: markdown
+    validations:
+      required: true
+  - type: input
+    id: headset
+    attributes:
+      label: Headset and call app
+      description: For example, the headset model and the app you were in a call with.

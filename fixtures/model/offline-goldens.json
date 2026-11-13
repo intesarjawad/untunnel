@@ -1,0 +1,92 @@
+{
+  "checkpoint_sha256": "06badaf4029b297f97f7fe48d62990b48d5482608210df577354e0d4e0ed70e1",
+  "device": "cpu",
+  "files": [
+    "offline-goldens.0.safetensors",
+    "offline-goldens.1.safetensors",
+    "offline-goldens.2.safetensors",
+    "offline-goldens.3.safetensors",
+    "offline-goldens.4.safetensors"
+  ],
+  "generator": "tools/reference/offline_goldens.py",
+  "goldens": [
+    {
+      "name": "speech-8k",
+      "perturbed_rerun": {
+        "difference_snr_db": 70.06,
+        "maximum_difference": 7.21961259841919e-05
+      },
+      "sample_rate": 8000
+    },
+    {
+      "name": "speech-16k",
+      "perturbed_rerun": {
+        "difference_snr_db": 71.85,
+        "maximum_difference": 5.143880844116211e-05
+      },
+      "sample_rate": 16000
+    },
+    {
+      "name": "speech-24k",
+      "perturbed_rerun": {
+        "difference_snr_db": 78.78,
+        "maximum_difference": 4.2535364627838135e-05
+      },
+      "sample_rate": 24000
+    },
+    {
+      "name": "speech-48k",
+      "perturbed_rerun": {
+        "difference_snr_db": 79.64,
+        "maximum_difference": 3.311038017272949e-05
+      },
+      "sample_rate": 48000
+    }
+  ],
+  "intermediates": {
+    "blocks": [
+      0,
+      1,
+      14,
+      15,
+      28,
+      29
+    ],
+    "layout": "input: [frame, bin]; encoder and blocks: [frame, bin, channel]; magnitude and phase: [frame, bin] before cropping",
+    "sample_rate": 8000,
+    "tensors": [
+      "intermediates.block0",
+      "intermediates.block1",
+      "intermediates.block14",
+      "intermediates.block15",
+      "intermediates.block28",
+      "intermediates.block29",
+      "intermediates.encoder",
+      "intermediates.input.magnitude",
+      "intermediates.input.phase",
+      "intermediates.magnitude",
+      "intermediates.phase"
+    ]
+  },
+  "mamba": "plain PyTorch substitute for mamba_ssm.Mamba, from realtime_goldens.py",
+  "noise_floor": 0.003,
+  "perturbation": 1e-06,
+  "repository": "nvidia/NVIDIA-NemotronLabs-RE-USE",
+  "revision": "31f82f2efad1095034492f236e8dac9239ba713b",
+  "speech": {
+    "licence": "http://creativecommons.org/licenses/publicdomain/",
+    "sha256": "641ad9e73d10e7bd928f590381e41ba79e6f3200621792aa0bf4e559ca1b43e8",
+    "start_seconds": 11.0,
+    "url": "https://archive.org/download/short_poetry_001_librivox/because_I_could_not_stop_for_death_dickinson_64kb.mp3"
+  },
+  "torch": "2.15.0",
+  "upstream_sha256": {
+    "config.json": "e69986483774f01893d2727503addc49ef201d19e6e1a266b8d4e971e28c478d",
+    "inference.py": "71ccef1b231bd30c85b1cddd85266ef9cdc3216dc85db65e38f89a670ae28236",
+    "models/codec_module_time_d4.py": "02bd1d478f36a9b38dce7d44368805298f42798ea239304580f1ccffafe766a0",
+    "models/generator_SEMamba_time_d4.py": "beebaf2d9ab7b83c101f46246ae7a7a8a2d2f57b6683025d3712c64c1b7d6817",
+    "models/mamba_block2_SEMamba.py": "97397af2d7e0f5e6530aa8c4a45b4f0f0030b4b56d8c9922a9b0bc25f8b5962e",
+    "models/stfts.py": "b82383c1ec7d7e9fe9bca1f93b3c0afe9609e191c38efc16f705e7145198d835",
+    "utils/util.py": "85960c6eb94033f37f9f77676a0cf2e7285ce12b11c24ba77577fc354766d0bf"
+  }
+}

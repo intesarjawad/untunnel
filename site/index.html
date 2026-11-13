@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self'"
+        />
+        <meta name="color-scheme" content="light" />
+        <meta
+            name="description"
+            content="Your headset sounds tinny on calls. Untunnel tries to fix that. Experimental, on Mac."
+        />
+        <meta property="og:title" content="Untunnel" />
+        <meta
+            property="og:description"
+            content="A headset call cuts your voice at 8 kHz, where s, f and t live. Untunnel draws the rest back."
+        />
+        <meta property="og:image" content="https://untunnel.intesarjawad.com/social-card.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+        <link rel="preload" href="fonts/league-gothic.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="stylesheet" href="style.css" />
+        <title>Untunnel: the top of your voice, back on a headset call</title>
+        <script type="module" src="score.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+        <header class="masthead">
+            <a class="wordmark" href="./" aria-label="Untunnel, home">
+                <span class="wordmark__s" aria-hidden="true">s</span>
+                <span class="wordmark__name">Untunnel</span>
+            </a>
+            <nav class="masthead__nav" aria-label="Sections">
+                <a href="#how">How it works</a>
+                <a href="test/">Check your microphone</a>
+                <a href="#install">Install</a>
+                <a href="#limits">Limits</a>
+                <a href="headsets/">Headset reports</a>
+                <a href="https://github.com/intesarjawad/untunnel">Source</a>
+            </nav>
+            <div class="menubar">
+                <button
+                    class="menubar__item"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="app-menu"
+                    aria-label="Untunnel menu"
+                >
+                    <span class="menubar__s" aria-hidden="true">s</span>
+                </button>
+                <div class="menubar__menu" id="app-menu">
+                    <canvas class="menubar__strip" aria-hidden="true"></canvas>
+                    <p class="menubar__line menubar__line--note menubar__status" aria-hidden="true">Restoring at 48&nbsp;kHz</p>
+                    <div class="menubar__more" aria-hidden="true">
+                        <p class="menubar__line menubar__line--on">Auto-route</p>
+                        <p class="menubar__line">Also restore the other person</p>
+                        <hr />
+                        <p class="menubar__line">Hear Yourself (F13)</p>
+                        <p class="menubar__line">Monitor</p>
+                    </div>
+                    <button class="menubar__line menubar__bypass" type="button">Bypass Restore <span aria-hidden="true">⌃⌥H</span></button>
+                    <div class="menubar__more" aria-hidden="true">
+                        <p class="menubar__line menubar__line--on">Open at Login</p>
+                        <hr />
+                        <p class="menubar__line">Quit <span>⌘Q</span></p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="main">
+            <section class="stage" aria-labelledby="headline">
+                <div class="stage__head">
+                    <h1 id="headline" class="headline">
+                        A headset call cuts your voice at 8&nbsp;kHz, where s, f and t live. Untunnel
+                        <em>draws the rest back.</em>
+                    </h1>
+                    <div class="listen">
+                        <button class="button button--play" type="button" data-take="line" disabled>
+                            Play the line
+                        </button>
+                        <button class="button button--quiet" type="button" data-take="headset" disabled>
+                            Hear the headset alone
+                        </button>
+                        <p class="listen__status" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+
+                <figure class="score" id="score" data-state="still">
+                    <picture class="score__still">
+                        <source media="(max-width: 699px)" srcset="clip/still-narrow.png" />
+                        <img
+                            src="clip/still-wide.png"
+                            alt="One spoken line set twice in tall type, each word as wide as it was said, letter height standing for frequency. Above, through the headset, every letter is cut flat a third of the way up, at 8 kHz, under an empty band measured up to 24 kHz. Below, through Untunnel, the same letters have their tops printed back in a red halftone, solid where the hiss is loudest: the s of stop, the f, the th."
+                        />
+                    </picture>
+                    <canvas class="score__canvas" aria-hidden="true"></canvas>
+                    <div class="score__veils" aria-hidden="true"></div>
+                    <div class="score__staves" aria-hidden="true"></div>
+                    <span class="score__front" aria-hidden="true"></span>
+                    <div class="ruler">
+                        <ol class="ruler__words" aria-label="Each word: focus to redraw its top, press to hear it"></ol>
+                    </div>
+                    <figcaption class="visually-hidden">
+                        The line, read by a LibriVox volunteer: “Because I could not stop for Death.”
+                    </figcaption>
+                </figure>
+
+                <div class="stage__foot">
+                    <p class="provenance">
+                        A LibriVox reading of Emily Dickinson (public domain), sent through the
+                        project’s mSBC headset simulation and restored by
+                        <code>untunnel enhance --model streaming --bwe 48000</code>. The source is a 64&nbsp;kbps MP3
+                        whose own top stops at 10.9&nbsp;kHz, so the red above that has no original
+                        to match. The red is predicted, not recovered.
+                    </p>
+                    <ul class="legend">
+                        <li><span class="legend__key legend__key--ink" aria-hidden="true"></span>Survived the headset, up to 8&nbsp;kHz</li>
+                        <li><span class="legend__key legend__key--red" aria-hidden="true"></span>Predicted by the model, 8 to 24&nbsp;kHz</li>
+                        <li><span class="legend__key legend__key--cut" aria-hidden="true"></span>Where the headset stops</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="act act--status" id="status" aria-labelledby="status-title">
+                <h2 class="act__title" id="status-title"><span class="act__title-line">Where it stands</span></h2>
+                <div class="act__body">
+                    <p class="direction">
+                        The app wires the outgoing path: headset capture, resampling and drift
+                        control, the restoration model and the “Untunnel Microphone” driver,
+                        falling back to the raw microphone whenever a stage fails.
+                        <strong>That path has not run on a real call yet.</strong> It needs the
+                        driver installed with administrator rights and a headset to test with,
+                        and no release is published.
+                    </p>
+                    <p>
+                        Restoring the other person’s voice is wired too, behind a menu toggle that
+                        starts off. It taps the call app, restores its audio and plays it on
+                        headphones only. It has not run on a real call either, and it needs
+                        macOS’s system-audio permission, which no one has granted it yet.
+                    </p>
+                    <p>
+                        What runs today without the driver: the model on files
+                        (<code>untunnel enhance</code>), the benchmark, <code>doctor</code>, the
+                        driver build, <code>uninstall</code>, and the Hear Yourself window, which
+                        records your headset and plays the restored take beside the original.
+                    </p>
+                </div>
+            </section>
+
+            <section class="act" id="how" aria-labelledby="how-title">
+                <h2 class="act__title" id="how-title"><span class="act__title-line">What a call does to a voice</span></h2>
+                <div class="act__body">
+                    <p class="lede">
+                        A headset plays music at a high sample rate. When any app opens its
+                        microphone, macOS switches it to the Bluetooth call profile, which
+                        carries your voice at 16&nbsp;kHz or 8&nbsp;kHz. Anything above half that
+                        rate is gone, and consonants such as s, f and t live there.
+                    </p>
+                    <p>
+                        Untunnel runs a speech restoration model on that narrow signal. It
+                        predicts the missing band from what survived; it does not recover it. A
+                        virtual microphone, “Untunnel Microphone”, carries the result into Zoom,
+                        Meet or FaceTime.
+                    </p>
+                    <p>
+                        There are two models, both written in Swift from the published
+                        architecture and held to the publisher’s own code by parity tests. The
+                        streaming model, NVIDIA’s Real-time RE-USE, is the live path: a
+                        40&nbsp;ms window, a 20&nbsp;ms hop, and recurrences that keep state from
+                        frame to frame. The offline model, NVIDIA-NemotronLabs-RE-USE, reads a
+                        whole chunk at once, so it works on files only.
+                    </p>
+                    <p>
+                        <a href="https://github.com/intesarjawad/untunnel/blob/main/docs/how-it-works.md">How the audio flows through each source file</a>,
+                        the
+                        <a href="https://github.com/intesarjawad/untunnel/blob/main/docs/architecture.md">architecture</a>
+                        and the
+                        <a href="https://github.com/intesarjawad/untunnel/tree/main/docs/adr">decisions</a>.
+                    </p>
+                </div>
+            </section>
+
+            <section class="act act--menu" id="menu" aria-labelledby="menu-title">
+                <h2 class="act__title" id="menu-title"><span class="act__title-line">What the menu holds</span></h2>
+                <div class="act__body">
+                    <p>
+                        Untunnel lives in the menu bar. These are the app’s own lines, in the
+                        order it lists them.
+                    </p>
+                    <ul class="menu-lines">
+                        <li><span class="menu-lines__item">Restore engine ready at 48&nbsp;kHz</span> The engine line, or what failed and how to fix it.</li>
+                        <li><span class="menu-lines__item">Auto-route</span> When macOS switches to your headset as it connects, Untunnel’s microphone takes its place. A device you pick by hand is never overridden.</li>
+                        <li><span class="menu-lines__item">Also restore the other person</span> Off until you turn it on. Headphones only, so the restored voice never reaches the call as echo.</li>
+                        <li><span class="menu-lines__item">Hear Yourself <kbd>F13</kbd></span> Records your headset and plays the restored take beside the original.</li>
+                        <li><span class="menu-lines__item">Monitor</span> Shows the microphone and incoming paths live, and records them.</li>
+                        <li><span class="menu-lines__item">Bypass Restore <kbd>Control</kbd> <kbd>Option</kbd> <kbd>H</kbd></span> Passes your raw microphone through until you resume.</li>
+                        <li><span class="menu-lines__item">Open at Login</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="act" id="test" aria-labelledby="test-title">
+                <h2 class="act__title" id="test-title"><span class="act__title-line">See what your headset sends</span></h2>
+                <div class="act__body">
+                    <p class="lede">
+                        Record five seconds in this browser and see the highest frequency your
+                        headset sends on a call. Nothing is uploaded.
+                    </p>
+                    <p><a class="button button--play" href="test/">Check your call microphone</a></p>
+                </div>
+            </section>
+
+            <section class="act act--time" id="time" aria-labelledby="time-title">
+                <h2 class="act__title" id="time-title"><span class="act__title-line">Time per frame</span></h2>
+                <div class="act__body">
+                    <p class="lede">
+                        Run <code>untunnel bench</code> to measure streaming engine time on your Mac.
+                        The result is per-frame engine time; end-to-end call delay has not been measured.
+                    </p>
+                </div>
+            </section>
+
+            <section class="act" id="install" aria-labelledby="install-title">
+                <h2 class="act__title" id="install-title"><span class="act__title-line">Install</span></h2>
+                <div class="act__body">
+                    <p class="direction">
+                        Planned for the first release; neither line works before it exists. Read
+                        <a href="install.sh">the install script</a> first.
+                    </p>
+                    <pre class="code" tabindex="0" role="region" aria-label="Scrollable commands"><code>curl -fsSL https://untunnel.intesarjawad.com/install.sh | sh
+brew install intesarjawad/tap/untunnel</code></pre>
+                    <p>
+                        From source today, with Xcode (Swift 6.2 or later), uv, make, Git and
+                        gitleaks on Apple silicon and macOS 15 or later:
+                    </p>
+                    <pre class="code" tabindex="0" role="region" aria-label="Scrollable commands"><code>make setup
+make check
+make run</code></pre>
+                </div>
+            </section>
+
+            <section class="act" id="footprint" aria-labelledby="footprint-title">
+                <h2 class="act__title" id="footprint-title"><span class="act__title-line">What it writes, and how it leaves</span></h2>
+                <div class="act__body">
+                    <p>
+                        Four paths. Models, Monitor recordings and preferences live inside the
+                        Application Support folder.
+                    </p>
+                    <ul class="paths">
+                        <li><code>~/Applications/Untunnel.app</code></li>
+                        <li><code>~/Library/LaunchAgents/com.intesarjawad.untunnel.plist</code></li>
+                        <li><code>~/Library/Application Support/Untunnel</code></li>
+                        <li><code>/Library/Audio/Plug-Ins/HAL/Untunnel.driver</code></li>
+                    </ul>
+                    <p>
+                        <code>untunnel uninstall --dry-run</code> lists them and the commands it
+                        would run; <code>untunnel uninstall</code> does the same after asking. It
+                        leaves the app’s user defaults;
+                        <code>defaults delete com.intesarjawad.untunnel</code> removes them.
+                    </p>
+                </div>
+            </section>
+
+            <section class="act" id="licences" aria-labelledby="licences-title">
+                <h2 class="act__title" id="licences-title"><span class="act__title-line">Licences</span></h2>
+                <div class="act__body">
+                    <p>
+                        The code is MIT. The model weights are not included and keep their own
+                        licences.
+                    </p>
+                    <dl class="licences">
+                        <div>
+                            <dt>Streaming, <code>nvidia/Real-time_RE-USE</code></dt>
+                            <dd>NVIDIA One-Way Noncommercial License (NSCLv1): non-commercial research and educational use. This is the live path, so a build that restores a call with it is for non-commercial use, whatever licence the Swift code has.</dd>
+                        </div>
+                        <div>
+                            <dt>Offline, <code>nvidia/NVIDIA-NemotronLabs-RE-USE</code></dt>
+                            <dd>OpenMDW-1.1. Its model card says it is ready for commercial use; read the licence text before you rely on that. It works on files only.</dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="act" id="limits" aria-labelledby="limits-title">
+                <h2 class="act__title" id="limits-title"><span class="act__title-line">Limits</span></h2>
+                <div class="act__body">
+                    <ul class="limits">
+                        <li>The missing band is predicted from what survived, not recovered.</li>
+                        <li>The live path has not run on a real call yet, and the added delay is not measured. The streaming model alone adds its 40&nbsp;ms window plus one 20&nbsp;ms hop per look-ahead frame.</li>
+                        <li>Speech only. The model suppresses what is not speech.</li>
+                        <li>The streaming weights are non-commercial. The model cleared for commercial use works on files only.</li>
+                        <li>Incoming restoration (the other person) runs on headphones only, because on speakers it would reach the call as echo.</li>
+                        <li>Apple silicon and macOS 15 or later only. Timings exist for no other machine.</li>
+                        <li>The app and driver are signed ad hoc and not notarised.</li>
+                        <li>Not compared by ear or by measurement with Apple Mic Modes, Krisp or the rest; <a href="https://github.com/intesarjawad/untunnel/blob/main/docs/alternatives.md">what each one does</a>.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="colophon">
+            <p>
+                <a href="https://github.com/intesarjawad/untunnel">Source on GitHub</a>, MIT.
+                Set in League Gothic and Source Serif 4, both under the SIL Open Font License.
+                The line is a LibriVox recording in the public domain.
+                <a href="credits.json">Credits</a>.
+            </p>
+        </footer>
+    </body>
+</html>

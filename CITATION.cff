@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: Untunnel
+abstract: >-
+  A macOS menu bar app and Swift package that restores the voice band a Bluetooth headset
+  microphone loses in calls, by running a speech restoration model on the Mac.
+authors:
+  - family-names: Jawad
+    given-names: Intesar
+repository-code: "https://github.com/intesarjawad/untunnel"
+license: MIT
+version: 0.1.0
+keywords:
+  - audio
+  - bandwidth extension
+  - speech restoration
+  - macOS
+  - Core Audio

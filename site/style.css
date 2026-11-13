@@ -1,0 +1,1078 @@
+@font-face {
+    font-family: "League Gothic";
+    src: url("fonts/league-gothic.woff2") format("woff2");
+    font-stretch: 75% 100%;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Source Serif 4";
+    src: url("fonts/source-serif-4.woff2") format("woff2");
+    font-weight: 400 650;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Source Serif 4";
+    src: url("fonts/source-serif-4-italic.woff2") format("woff2");
+    font-weight: 400 650;
+    font-style: italic;
+    font-display: swap;
+}
+
+:root {
+    --ground: #fbfbf8;
+    --ink: #121212;
+    --ink-soft: #4f4f4b;
+    --rule: #121212;
+    --red: #d02a19;
+    --hot: #ff4a1c;
+    --code-ground: #efefea;
+    /* The macOS menu highlight, used only on the menu picture. */
+    --accent: #0a5cd0;
+    --display: "League Gothic", "Arial Narrow", sans-serif;
+    --text: "Source Serif 4", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --system: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --margin: 32px;
+    --gutter: 24px;
+    /* Where the 8 kHz line falls on a capital: a third of the way up, since letter height spans 0 to 24 kHz. */
+    --cut: 0.3333;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--ground);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font: 400 17px/1.55 var(--text);
+    font-optical-sizing: auto;
+    font-variant-numeric: lining-nums;
+}
+
+a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+}
+
+a:hover {
+    text-decoration-thickness: 2px;
+}
+
+/* Red is kept for predicted sound, so focus is drawn in ink. */
+:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+}
+
+code,
+kbd,
+pre {
+    font-family: var(--mono);
+    font-size: 0.86em;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--margin);
+    z-index: 3;
+    padding: 8px 12px;
+    background: var(--ink);
+    color: var(--ground);
+}
+
+.skip-link:focus {
+    top: 12px;
+}
+
+/* Masthead: the page's menu bar, with the app's own menu open under its status item */
+
+.masthead {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-height: 34px;
+    padding: 0 var(--margin);
+    background: #eeeeea;
+    border-bottom: 1px solid #d4d4ce;
+    font: 400 14px/1 var(--system);
+}
+
+.wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 0 2px;
+    text-decoration: none;
+}
+
+.wordmark__s,
+.menubar__s {
+    font: 400 27px/1 var(--display);
+    background: linear-gradient(
+        to top,
+        var(--ink) 0 31%,
+        transparent 31% 35%,
+        var(--red) 35%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.wordmark__name {
+    font: 400 19px/1 var(--display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.masthead__nav {
+    display: flex;
+    gap: 0 20px;
+}
+
+.masthead__nav a {
+    padding: 10px 0;
+    text-decoration: none;
+}
+
+.masthead__nav a:hover {
+    text-decoration: underline;
+}
+
+.menubar {
+    position: relative;
+    margin-left: auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+}
+
+.menubar__item {
+    display: flex;
+    align-items: center;
+    height: 26px;
+    padding: 1px 9px 0;
+    border: 0;
+    border-radius: 5px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.menubar__item:hover,
+.menubar__item[aria-expanded="true"] {
+    background: rgb(18 18 18 / 12%);
+}
+
+.menubar__item[aria-expanded="false"] + .menubar__menu {
+    display: none;
+}
+
+.menubar__s {
+    font-size: 24px;
+}
+
+/* Bypassed, the status item's top is no longer drawn back: ink below the cut, a faint top above. */
+.menubar[data-bypassed="true"] .menubar__s {
+    background: linear-gradient(to top, var(--ink) 0 31%, transparent 31% 35%, rgb(18 18 18 / 28%) 35%);
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+/* A native-looking menu: system type, translucent, the one place the page has corners and shadow. */
+.menubar__menu {
+    position: absolute;
+    top: calc(100% + 1px);
+    right: -6px;
+    width: 300px;
+    padding: 5px;
+    border: 1px solid rgb(18 18 18 / 14%);
+    border-radius: 9px;
+    background: rgb(246 246 243 / 86%);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    backdrop-filter: blur(24px) saturate(1.6);
+    box-shadow: 0 10px 30px rgb(18 18 18 / 18%);
+    font: 400 13px/1 var(--system);
+}
+
+.menubar__strip {
+    display: block;
+    width: calc(100% - 8px);
+    height: 26px;
+    margin: 4px 4px 6px;
+}
+
+/* Every row the same height, the button included, as in a native menu. */
+.menubar__line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 22px;
+    margin: 0;
+    padding: 0 9px 0 22px;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.menubar__bypass {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menubar__bypass:hover,
+.menubar__bypass:focus-visible {
+    background: var(--accent);
+    color: #fff;
+    outline: none;
+}
+
+.menubar__bypass:hover span,
+.menubar__bypass:focus-visible span {
+    color: inherit;
+}
+
+.menubar__line span {
+    color: #6d6d68;
+}
+
+.menubar__line--note {
+    color: #6d6d68;
+}
+
+.menubar__line--on {
+    position: relative;
+}
+
+.menubar__line--on::before {
+    content: "✓";
+    position: absolute;
+    left: 7px;
+    font-size: 11px;
+}
+
+.menubar__menu hr {
+    margin: 4px 9px;
+    border: 0;
+    border-top: 1px solid rgb(18 18 18 / 12%);
+}
+
+/* The stage: the claim, the buttons, then the line */
+
+.stage {
+    padding-bottom: 56px;
+}
+
+.stage__head {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px var(--gutter);
+    margin: 0 var(--margin);
+    padding-top: 26px;
+}
+
+.headline {
+    grid-column: 1 / span 8;
+    margin: 0;
+    font-size: clamp(26px, 2.9vw, 44px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.014em;
+    text-wrap: balance;
+}
+
+.headline em {
+    font-style: normal;
+    color: var(--red);
+}
+
+.listen {
+    grid-column: 1 / span 8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 24px;
+    margin-top: 6px;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.listen .button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button--play {
+    justify-content: center;
+    min-width: 176px;
+    padding: 10px 22px 8px;
+    background: var(--ink);
+    color: var(--ground);
+    font: 400 24px/1 var(--display);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.button__mark {
+    width: 13px;
+    height: 15px;
+    margin-top: -2px;
+}
+
+.button__mark--pause {
+    border-inline: 4px solid currentColor;
+}
+
+.button__mark--play {
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.button__time {
+    min-width: 4.2em;
+    text-transform: none;
+    margin-left: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+}
+
+.button--quiet {
+    padding: 0;
+    background: none;
+    color: var(--ink);
+    font-size: 16px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+}
+
+.button--quiet:hover,
+.button--quiet[aria-pressed="true"] {
+    text-decoration-thickness: 2px;
+}
+
+/* The score: the line as type, headset above and Untunnel below */
+
+.score {
+    position: relative;
+    margin: 22px 0 0;
+    width: 100%;
+    height: clamp(340px, 55vh, 560px);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.score__still,
+.score__still img,
+.score__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.score__still img {
+    display: block;
+    object-fit: fill;
+}
+
+.score__canvas {
+    opacity: 0;
+}
+
+.score__veils {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.score__veil {
+    position: absolute;
+    background: var(--ground);
+}
+
+.score__veil.is-front {
+    border-left: 1.5px solid var(--red);
+}
+
+/* Played bypassed, the tops heard before it turn ink-grey, as on the canvas. */
+.score__veil.is-dim {
+    background: color-mix(in srgb, var(--ground) 45%, transparent);
+    -webkit-backdrop-filter: grayscale(1);
+    backdrop-filter: grayscale(1);
+}
+
+/* The front's own label, riding the rule at the top of the band it is drawing back. */
+.score__front {
+    position: absolute;
+    display: none;
+    color: var(--red);
+    font: 600 12px/1 var(--text);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.score__front.is-on {
+    display: block;
+}
+
+.score__front.is-bypassed {
+    color: var(--ink);
+}
+
+.score[data-state="live"] .score__canvas {
+    opacity: 1;
+}
+
+.score[data-state="live"] .score__still {
+    visibility: hidden;
+}
+
+.score[data-state="live"] {
+    cursor: pointer;
+}
+
+.score__staves {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Each stave is measured: a hairline at 24 kHz, the dashed cut at 8 kHz, and a scale in the left
+   column where the stave's name hangs from its cap line. */
+.stave {
+    position: absolute;
+}
+
+.stave__cap {
+    position: absolute;
+    top: 0;
+    left: calc(-1 * var(--column));
+    right: 0;
+    border-top: 1px solid var(--ink-soft);
+}
+
+.stave__cut {
+    position: absolute;
+    top: var(--cut-at);
+    left: 0;
+    right: 0;
+    border-top: 1px dashed var(--ink);
+}
+
+.stave__tick {
+    position: absolute;
+    right: calc(100% + 10px);
+    color: var(--ink-soft);
+    font: 400 12px/1 var(--text);
+    font-variant-numeric: lining-nums tabular-nums;
+    white-space: nowrap;
+}
+
+.stave__tick--top {
+    top: 5px;
+}
+
+.stave__tick--cut {
+    top: var(--cut-at);
+    transform: translateY(-50%);
+    color: var(--ink);
+}
+
+.stave__tick--base {
+    bottom: 0;
+}
+
+.stave__label {
+    position: absolute;
+    top: 5px;
+    left: calc(-1 * var(--column));
+    width: calc(var(--column) - 12px);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+/* The name shares its line with the 24 kHz mark; the detail below has the column to itself. */
+.stave__name {
+    display: block;
+    max-width: calc(var(--column) - 64px);
+    font-weight: 600;
+}
+
+.stave--restored .stave__name {
+    color: var(--red);
+}
+
+.stave__detail {
+    display: block;
+    color: var(--ink-soft);
+}
+
+/* The ruler: every word as a button, the keyboard path to the sweep and the sound */
+
+.ruler,
+.ruler__words {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    pointer-events: none;
+}
+
+.ruler__words li {
+    position: absolute;
+    pointer-events: auto;
+}
+
+.ruler__word {
+    display: block;
+    width: 100%;
+    min-height: 32px;
+    padding: 5px 0 4px;
+    border: 0;
+    border-top: 1px solid var(--ink-soft);
+    background: none;
+    color: var(--ink);
+    font: italic 400 14px/1.2 var(--text);
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ruler__word:hover {
+    border-top: 2px solid var(--ink);
+    padding-top: 4px;
+}
+
+.ruler__word.is-active {
+    border-top: 2px solid var(--red);
+    padding-top: 4px;
+}
+
+/* Under the score: where the line comes from, and a key to the three marks */
+
+.stage__foot {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 16px var(--gutter);
+    margin: 22px var(--margin) 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.provenance {
+    grid-column: 1 / span 6;
+    max-width: 66ch;
+    margin: 0;
+}
+
+.legend {
+    grid-column: 8 / span 5;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1px 0;
+}
+
+.legend__key {
+    flex: none;
+    width: 22px;
+    height: 10px;
+}
+
+.legend__key--ink {
+    background: var(--ink);
+}
+
+/* The same halftone the score prints in: red dots inside a red rim. */
+.legend__key--red {
+    border: 1px solid var(--red);
+    background: radial-gradient(circle, var(--red) 0 1.2px, transparent 1.5px) 0 0 / 4px 4px;
+}
+
+.legend__key--cut {
+    height: 0;
+    border-top: 1px dashed var(--ink);
+}
+
+/* Acts: the rest of the page */
+
+.act {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gutter);
+    margin: 0 var(--margin);
+    padding: 40px 0 72px;
+    border-top: 1px solid var(--rule);
+}
+
+.act__title {
+    grid-column: 1 / span 5;
+    align-self: start;
+    position: sticky;
+    top: 24px;
+    margin: 0;
+    font: 400 clamp(56px, 7.2vw, 124px) / 0.9 var(--display);
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+/* Every heading carries the cut: a hairline of ground through each line at the 8 kHz height. */
+.act__title-line {
+    background: linear-gradient(
+        to top,
+        var(--ink) 0 var(--scar-low),
+        transparent var(--scar-low) var(--scar-high),
+        var(--ink) var(--scar-high)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    color: transparent;
+    /* League Gothic's line box runs 23 units below the baseline and 97 above; caps are 73.5 tall. */
+    --scar-low: 38.9%;
+    --scar-high: 40.7%;
+}
+
+.act__body {
+    grid-column: 7 / span 6;
+    max-width: 62ch;
+    padding-top: 6px;
+}
+
+.act__body > :first-child {
+    margin-top: 0;
+}
+
+.act__body p {
+    margin: 0 0 16px;
+}
+
+.lede {
+    font-size: 21px;
+    line-height: 1.45;
+}
+
+.direction {
+    font-size: 21px;
+    font-style: italic;
+    line-height: 1.45;
+}
+
+.direction strong {
+    font-style: normal;
+    font-weight: 600;
+}
+
+.aside {
+    color: var(--ink-soft);
+    font-size: 15px;
+}
+
+.menu-lines,
+.limits,
+.paths {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+}
+
+.menu-lines li {
+    padding: 12px 0;
+    border-bottom: 1px solid #d4d4ce;
+    color: var(--ink-soft);
+}
+
+.menu-lines__item {
+    display: block;
+    color: var(--ink);
+    font: 400 26px/1.05 var(--display);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--ink);
+    font: 600 12px/1.4 var(--text);
+    letter-spacing: 0.04em;
+    text-transform: none;
+    vertical-align: 3px;
+}
+
+.limits li {
+    position: relative;
+    padding: 10px 0 10px 28px;
+    border-bottom: 1px solid #d4d4ce;
+}
+
+.limits li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 22px;
+    width: 16px;
+    border-top: 1px dashed var(--ink);
+}
+
+.paths li {
+    padding: 6px 0;
+    border-bottom: 1px solid #d4d4ce;
+    overflow-wrap: anywhere;
+}
+
+.code {
+    margin: 0 0 20px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    background: var(--code-ground);
+    line-height: 1.6;
+}
+
+.licences {
+    margin: 0;
+}
+
+.licences > div {
+    padding: 12px 0;
+    border-bottom: 1px solid #d4d4ce;
+}
+
+.licences dt {
+    font-weight: 600;
+}
+
+.licences dd {
+    margin: 4px 0 0;
+    color: var(--ink-soft);
+}
+
+.colophon {
+    margin: 0 var(--margin);
+    padding: 24px 0 40px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 14px;
+}
+
+.colophon p {
+    margin: 0;
+    max-width: 90ch;
+}
+
+/* Narrow screens: the line in two halves, each still a headset and Untunnel pair */
+
+@media (max-width: 699px) {
+    :root {
+        --margin: 16px;
+        --gutter: 16px;
+    }
+
+    body {
+        font-size: 16px;
+    }
+
+    .masthead {
+        gap: 14px;
+    }
+
+    .masthead__nav a:not(:nth-child(2), :nth-child(3)) {
+        display: none;
+    }
+
+    /* On a phone the menu opens from the status item as a sheet across the screen. */
+    .menubar {
+        position: static;
+    }
+
+    /* A short sheet over the headline: the band, then the status and Bypass on one row, so it ends
+       above the Play button and the staves stay in view while you press it. */
+    .menubar__menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 8px;
+        right: 8px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        width: auto;
+        font-size: 15px;
+    }
+
+    .menubar__strip {
+        grid-column: 1 / -1;
+        height: 18px;
+    }
+
+    .menubar__more {
+        display: none;
+    }
+
+    .menubar__line {
+        height: 44px;
+    }
+
+    .menubar__status {
+        padding-left: 9px;
+    }
+
+    .menubar__bypass {
+        width: auto;
+    }
+
+    .menubar__bypass span {
+        display: none;
+    }
+
+    .stage__head,
+    .act {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stage__head {
+        padding-top: 18px;
+        gap: 10px;
+    }
+
+    .headline,
+    .listen,
+    .act__title,
+    .act__body {
+        grid-column: 1;
+    }
+
+    .headline {
+        font-size: 27px;
+    }
+
+    .listen {
+        margin-top: 2px;
+        gap: 10px 20px;
+    }
+
+    .button--play {
+        min-width: 158px;
+        padding-inline: 14px;
+    }
+
+    .score {
+        height: clamp(420px, 62vh, 560px);
+    }
+
+    /* Only the first pair is named, above its cap lines, in one line. */
+    .stave__label {
+        top: auto;
+        bottom: calc(100% + 4px);
+        width: auto;
+        font-size: 12px;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .stave__name,
+    .stave__detail {
+        display: inline;
+    }
+
+    .stave__tick {
+        right: calc(100% + 6px);
+        font-size: 11px;
+    }
+
+    .stage__foot {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .provenance,
+    .legend {
+        grid-column: 1;
+    }
+
+    .act {
+        padding: 28px 0 48px;
+    }
+
+    .act__title {
+        position: static;
+        font-size: 56px;
+    }
+
+    .lede,
+    .direction {
+        font-size: 19px;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1099px) {
+    .headline,
+    .listen {
+        grid-column: 1 / span 9;
+    }
+
+    .provenance {
+        grid-column: 1 / span 7;
+    }
+
+    .legend {
+        grid-column: 8 / span 5;
+    }
+
+    .act__title,
+    .act__body {
+        grid-column: 1 / span 12;
+    }
+}
+
+/* With room, the menu hangs open beside the claim and the score starts below it. */
+@media (min-width: 1100px) {
+    /* The claim runs right up to the open menu, which hangs from its status item beside it. */
+    .stage__head {
+        grid-template-columns: minmax(0, 1fr) 294px;
+        column-gap: 32px;
+    }
+
+    .headline,
+    .listen {
+        grid-column: 1;
+    }
+
+    .headline {
+        font-size: clamp(26px, 3.7vw, 60px);
+        text-wrap: pretty;
+    }
+
+    .stage__head {
+        align-content: start;
+        min-height: 262px;
+    }
+}
+
+/* The page's own frames for the README hero and the social card */
+
+html[data-frame] .masthead,
+html[data-frame] .listen,
+html[data-frame] .ruler,
+html[data-frame] .stage__foot,
+html[data-frame] .act,
+html[data-frame] .colophon,
+html[data-frame] .skip-link {
+    display: none;
+}
+
+html[data-frame] .stage {
+    padding-bottom: 0;
+}
+
+html[data-frame] .stage__head {
+    min-height: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 26px;
+}
+
+html[data-frame] .stage__head::before {
+    content: "Untunnel";
+    font: 400 40px/1 var(--display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+html[data-frame] .headline {
+    font-size: 27px;
+    white-space: nowrap;
+}
+
+html[data-frame] .score {
+    height: calc(100vh - 98px);
+    margin-top: 22px;
+}
+
+html[data-frame] .stave__label {
+    font-size: 17px;
+}
+
+html[data-frame] .stave__tick {
+    font-size: 14px;
+}
+
+html[data-frame] .stave__detail {
+    display: none;
+}
+
+html[data-frame="still"] body > :not(main),
+html[data-frame="still"] .stage > :not(.score),
+html[data-frame="still"] .score__staves {
+    display: none;
+}
+
+html[data-frame="still"] .score {
+    height: clamp(340px, 55vh, 560px);
+    margin: 0;
+}
+
+@media (max-width: 699px) {
+    html[data-frame="still"] .score {
+        height: clamp(420px, 62vh, 560px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+    }
+}

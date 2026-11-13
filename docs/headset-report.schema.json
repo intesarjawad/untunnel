@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Headset report",
+  "description": "The JSON object `untunnel doctor --headset-report` prints. It holds device names and numbers, never audio. Beyond this schema, rolloff_40db_hz.raw is at most half of call_mode.input_rate_hz, and rolloff_40db_hz.untunnel is at most half of the larger of call_mode.input_rate_hz and tier.sample_rate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "headset",
+    "call_mode",
+    "tier",
+    "added_latency_ms",
+    "macos_build",
+    "rolloff_40db_hz"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "headset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "vendor_id", "product_id"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "vendor_id": { "type": "string", "pattern": "^0x[0-9A-F]{4}$" },
+        "product_id": { "type": "string", "pattern": "^0x[0-9A-F]{4}$" },
+        "firmware": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "call_mode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_rate_hz", "output_rate_hz"],
+      "properties": {
+        "input_rate_hz": { "type": "integer", "minimum": 8000, "maximum": 96000 },
+        "output_rate_hz": { "type": "integer", "minimum": 8000, "maximum": 96000 }
+      }
+    },
+    "tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_rate", "exit_layer", "look_ahead"],
+      "properties": {
+        "sample_rate": { "type": "integer", "minimum": 8000, "maximum": 96000 },
+        "exit_layer": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "look_ahead": { "type": "integer", "minimum": 0, "maximum": 16 }
+      }
+    },
+    "added_latency_ms": { "type": "number", "minimum": 0, "maximum": 1000 },
+    "macos_build": { "type": "string", "pattern": "^[0-9]{2}[A-Z][0-9]{1,5}[a-z]?$" },
+    "rolloff_40db_hz": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw", "untunnel"],
+      "properties": {
+        "raw": { "type": "integer", "minimum": 125, "maximum": 96000 },
+        "untunnel": { "type": "integer", "minimum": 125, "maximum": 96000 }
+      }
+    }
+  }
+}

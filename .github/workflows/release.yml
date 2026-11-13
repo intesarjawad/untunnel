@@ -1,0 +1,134 @@
+name: release
+
+# Push a v* tag, or run this workflow from one. A tag with a hyphen (v0.1.0-rc1) makes a
+# pre-release; every job still runs so the install script and the formula can install it.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ github.ref_name }}
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Create the release with its CHANGELOG section
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_REF_TYPE" != tag ]; then
+            echo "Run this workflow from a v* tag, not from a branch." >&2
+            exit 1
+          fi
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "Release $TAG exists; keeping its notes."
+            exit 0
+          fi
+          version=${TAG#v}
+          heading="## [${version%%-*}]"
+          awk -v heading="$heading" '
+            index($0, heading) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          case "$version" in
+            *-*)
+              [ -s "$RUNNER_TEMP/notes.md" ] || echo "Release candidate for ${version%%-*}." > "$RUNNER_TEMP/notes.md"
+              gh release create "$TAG" --verify-tag --prerelease --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+              ;;
+            *)
+              if [ ! -s "$RUNNER_TEMP/notes.md" ]; then
+                echo "CHANGELOG.md has no '$heading' section." >&2
+                exit 1
+              fi
+              gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+              ;;
+          esac
+
+  package:
+    needs: release
+    runs-on: macos-26
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Stamp the version
+        # A new CFBundleVersion is what the running app's update check looks for.
+        run: |
+          version=${TAG#v}
+          /usr/libexec/PlistBuddy \
+            -c "Set :CFBundleShortVersionString ${version%%-*}" \
+            -c "Set :CFBundleVersion $GITHUB_RUN_NUMBER" \
+            Support/Info.plist
+      - run: tools/src/untunnel_tools/bundle.sh --zip
+      - name: Attach the archive and its checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$TAG" dist/Untunnel-arm64.zip dist/Untunnel-arm64.zip.sha256 --clobber
+
+  site:
+    needs: release
+    permissions:
+      contents: read
+      issues: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/site.yml
+
+  tap:
+    needs: package
+    runs-on: ubuntu-latest
+    env:
+      HAS_TAP_TOKEN: ${{ secrets.TAP_TOKEN != '' }}
+    steps:
+      - name: Require the tap token
+        if: env.HAS_TAP_TOKEN != 'true'
+        run: |
+          echo "TAP_TOKEN is missing: add a fine-grained token with Contents and Pull requests write on intesarjawad/homebrew-tap as the TAP_TOKEN secret." >&2
+          exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: intesarjawad/homebrew-tap
+          token: ${{ secrets.TAP_TOKEN }}
+          path: tap
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+      - name: Download the release checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$TAG" --pattern Untunnel-arm64.zip.sha256 --dir "$RUNNER_TEMP"
+      - name: Write the formula
+        run: |
+          mkdir -p tap/Formula
+          uv run --project tools --locked --no-default-groups \
+            python -m untunnel_tools.formula --tag "$TAG" \
+            --checksum "$RUNNER_TEMP/Untunnel-arm64.zip.sha256" > tap/Formula/untunnel.rb
+      - name: Open the pull request
+        working-directory: tap
+        env:
+          GH_TOKEN: ${{ secrets.TAP_TOKEN }}
+        run: |
+          branch="untunnel-$TAG"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add Formula/untunnel.rb
+          git commit -m "untunnel ${TAG#v}"
+          git push --force origin "$branch"
+          gh pr view "$branch" > /dev/null 2>&1 ||
+            gh pr create --head "$branch" --title "untunnel ${TAG#v}" --body "Formula for the $TAG release."

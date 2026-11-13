@@ -1,0 +1,10 @@
+.build/
+.cache/
+.swiftpm/
+.venv/
+dist/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.DS_Store

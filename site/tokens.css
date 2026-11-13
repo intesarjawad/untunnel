@@ -1,0 +1,466 @@
+@font-face {
+    font-family: "Source Serif 4";
+    src: url("fonts/source-serif-4.woff2") format("woff2");
+    font-weight: 400 650;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "League Gothic";
+    src: url("fonts/league-gothic.woff2") format("woff2");
+    font-display: swap;
+}
+
+:root {
+    --font-sans: "Source Serif 4", Georgia, serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --color-bg: #fbfbf8;
+    --color-surface: #ffffff;
+    --color-text: #121212;
+    --color-muted: #4f4f4b;
+    --color-border: #d4d4ce;
+    --color-accent: #d02a19;
+    --color-accent-soft: #fbe9e6;
+    --color-danger: #8a2b25;
+    --color-danger-soft: #fbecea;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --radius-small: 0;
+    --radius-medium: 0;
+    --radius-large: 0;
+    --measure: 42rem;
+    --shadow: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #121212;
+        --color-surface: #1c1c1b;
+        --color-text: #f2f2ee;
+        --color-muted: #b5b5ae;
+        --color-border: #3a3a37;
+        --color-accent: #ff8f7f;
+        --color-accent-soft: #3a1813;
+        --color-danger: #ffb3ab;
+        --color-danger-soft: #3b211e;
+        --shadow: none;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: light dark;
+}
+
+body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Red is kept for the band Untunnel predicts; links, focus and controls are drawn in ink. */
+a {
+    color: var(--color-text);
+    text-underline-offset: 0.2em;
+}
+
+a:hover {
+    text-decoration-thickness: 0.12em;
+}
+
+:focus-visible {
+    outline: 0.2rem solid var(--color-text);
+    outline-offset: 0.2rem;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: calc(-1 * var(--space-7));
+    z-index: 1;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border-radius: var(--radius-small);
+}
+
+.skip-link:focus {
+    top: var(--space-4);
+}
+
+/* The main page's bar and left margin, so the check reads as part of the same site. */
+.site-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 22px;
+    min-height: 34px;
+    padding: 0 1rem;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    font: 400 14px/1 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.site-bar__name {
+    display: inline-flex;
+    align-items: baseline;
+    padding: 4px 0 2px;
+    font: 400 19px/1 "League Gothic", "Arial Narrow", sans-serif;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.site-bar__s {
+    margin-right: 6px;
+    font-size: 27px;
+    text-transform: none;
+    background: linear-gradient(to top, var(--color-text) 0 31%, transparent 31% 35%, var(--color-accent) 35%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.site-bar__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+}
+
+.site-bar__nav a {
+    padding: 10px 0;
+    text-decoration: none;
+}
+
+.site-bar__nav a:hover,
+.site-bar__nav a[aria-current="page"] {
+    text-decoration: underline;
+}
+
+.page {
+    width: min(calc(100% - 2rem), var(--measure));
+    margin: 0 1rem;
+    padding: var(--space-6) 0 var(--space-7);
+}
+
+@media (max-width: 699px) {
+    .site-bar__nav a:not(:nth-child(2), :nth-child(3)) {
+        display: none;
+    }
+}
+
+@media (min-width: 700px) {
+    .site-bar {
+        padding: 0 32px;
+    }
+
+    .page {
+        margin-left: 32px;
+    }
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+h1 {
+    margin: 0 0 var(--space-3);
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    margin: 0 0 var(--space-3);
+    font-size: 1.4rem;
+}
+
+h3 {
+    margin: 0 0 var(--space-2);
+    font-size: 1.1rem;
+}
+
+p {
+    margin: 0 0 var(--space-4);
+}
+
+.lede {
+    max-width: 34rem;
+    color: var(--color-muted);
+    font-size: 1.125rem;
+}
+
+.status {
+    min-height: 1.6em;
+    margin: 0 0 var(--space-5);
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+.panel {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.card {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-text);
+}
+
+.card > :last-child {
+    margin-bottom: 0;
+}
+
+.verdict {
+    margin: 0 0 var(--space-4);
+    font-size: 1.25rem;
+    font-weight: 650;
+    line-height: 1.4;
+    text-wrap: balance;
+}
+
+.comparison strong {
+    color: var(--color-text);
+    font-weight: 600;
+    font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* A heading focused for screen readers after a result is not a control; no ring at rest. */
+[tabindex="-1"]:focus {
+    outline: none;
+}
+
+.card .fine-print {
+    margin-bottom: var(--space-3);
+}
+
+/* The sample's own reading, said once and plainly, under the button that replaces it. */
+.verdict--sample {
+    margin-top: var(--space-4);
+    font-size: 1.05rem;
+    font-weight: 400;
+}
+
+.panel > .button,
+.card > .button--primary {
+    justify-self: start;
+}
+
+/* The main page's two controls: a black slab set in the display face for the one action, and
+   underlined text for the rest. */
+.button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--color-text);
+    font: inherit;
+    text-align: left;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+}
+
+.button:hover,
+.button[aria-pressed="true"] {
+    text-decoration-thickness: 2px;
+}
+
+.button--primary {
+    justify-content: center;
+    min-width: 176px;
+    padding: 10px 22px 8px;
+    background: var(--color-text);
+    color: var(--color-bg);
+    font: 400 24px/1 "League Gothic", "Arial Narrow", sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+    margin: 0 0 var(--space-5);
+}
+
+.field {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 650;
+}
+
+select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+}
+
+.fine-print {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.fine-print {
+    margin-bottom: 0;
+}
+
+.shelf {
+    margin: 0 0 var(--space-5);
+}
+
+.shelf canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.shelf figcaption {
+    margin-top: var(--space-2);
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.comparison {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    list-style: none;
+}
+
+.comparison li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+
+
+.example {
+    margin: 0 0 var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+}
+
+
+/* The heading and verdict carry a result; the status line stays for screen readers only. */
+.page:is([data-state="result"], [data-state="compare"], [data-state="compared"]) .status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.error {
+    padding: var(--space-4);
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-medium);
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+.big {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 650;
+}
+
+progress {
+    width: 100%;
+    height: 0.75rem;
+    accent-color: var(--color-text);
+}
+
+/* Where there is room the word sits in a right column beside the controls, as the score does on
+   the main page; the panel and card lend their children to the page's grid. */
+@media (min-width: 1000px) {
+    .page {
+        display: grid;
+        grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+        align-items: start;
+        column-gap: 64px;
+        width: min(calc(100% - 64px), 1240px);
+    }
+
+    .page > *,
+    .panel > *,
+    .card > * {
+        grid-column: 1;
+    }
+
+    .panel,
+    .card {
+        display: contents;
+    }
+
+    .panel > .button,
+    .card > .button--primary {
+        margin-bottom: var(--space-4);
+    }
+
+    .card > :first-child {
+        padding-top: var(--space-4);
+        border-top: 1px solid var(--color-text);
+    }
+
+    .page .shelf {
+        grid-column: 2;
+        grid-row: 1 / span 12;
+        margin-top: var(--space-3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.table-scroll table { min-width: 42rem; }

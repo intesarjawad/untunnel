@@ -1,0 +1,38 @@
+{
+  "recording": "LibriVox, Emily Dickinson, \"Because I could not stop for Death\", 11 s into the file (tools/reference/realtime_goldens.py SPEECH)",
+  "timing": "whisper.cpp large-v3-turbo (q5_0) token timestamps on the clean 48 kHz excerpt, then moved by hand to the landmarks the headset STFT shows (python -m untunnel_tools.site.clip --frames prints them): the closure before each word, the s burst of \"stop\" at 4.18 s and the d burst of \"Death\" at 4.64 s. Whisper had \"not\" onward up to 0.18 s late. Each word runs to the next word's start; the last runs to the window end, just before \"He\" begins at 5.11 s.",
+  "window_seconds": [
+    3.44,
+    5.06
+  ],
+  "words": [
+    [
+      "Because",
+      3.45
+    ],
+    [
+      "I",
+      3.78
+    ],
+    [
+      "could",
+      3.88
+    ],
+    [
+      "not",
+      4.04
+    ],
+    [
+      "stop",
+      4.16
+    ],
+    [
+      "for",
+      4.46
+    ],
+    [
+      "Death,",
+      4.62
+    ]
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "environment" : {
+    "date" : "2026-11-10T10:14:00Z",
+    "machine" : "Mac17,2",
+    "macos" : "Version 27.3 (Build 26C5035r)",
+    "power_source" : "AC power"
+  },
+  "schema_version" : 1,
+  "tiers" : [
+    {
+      "exit_layer" : 4,
+      "idle" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 2.914916,
+        "median_ms" : 2.48025,
+        "p95_ms" : 2.63825,
+        "p999_ms" : 2.839,
+        "p99_ms" : 2.712583,
+        "parameter_count" : 2032067,
+        "peak_rss_bytes" : 421855232
+      },
+      "loaded" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 2.86425,
+        "median_ms" : 2.478458,
+        "p95_ms" : 2.61425,
+        "p999_ms" : 2.8205,
+        "p99_ms" : 2.711583,
+        "parameter_count" : 2032067,
+        "peak_rss_bytes" : 436289536
+      },
+      "look_ahead" : 0,
+      "sample_rate" : 16000
+    },
+    {
+      "exit_layer" : 5,
+      "idle" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 4.569833,
+        "median_ms" : 4.095125,
+        "p95_ms" : 4.333667,
+        "p999_ms" : 4.557542,
+        "p99_ms" : 4.441041,
+        "parameter_count" : 2240579,
+        "peak_rss_bytes" : 436289536
+      },
+      "loaded" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 4.539,
+        "median_ms" : 4.080292,
+        "p95_ms" : 4.210375,
+        "p999_ms" : 4.441583,
+        "p99_ms" : 4.351583,
+        "parameter_count" : 2240579,
+        "peak_rss_bytes" : 436289536
+      },
+      "look_ahead" : 1,
+      "sample_rate" : 24000
+    },
+    {
+      "exit_layer" : 6,
+      "idle" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 7.118042,
+        "median_ms" : 6.064167,
+        "p95_ms" : 6.434666,
+        "p999_ms" : 6.891333,
+        "p99_ms" : 6.700125,
+        "parameter_count" : 2449091,
+        "peak_rss_bytes" : 436289536
+      },
+      "loaded" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 6.739708,
+        "median_ms" : 6.010542,
+        "p95_ms" : 6.208875,
+        "p999_ms" : 6.515958,
+        "p99_ms" : 6.38575,
+        "parameter_count" : 2449091,
+        "peak_rss_bytes" : 436289536
+      },
+      "look_ahead" : 1,
+      "sample_rate" : 32000
+    },
+    {
+      "exit_layer" : 7,
+      "idle" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 10.808,
+        "median_ms" : 9.807625,
+        "p95_ms" : 10.164291,
+        "p999_ms" : 10.58875,
+        "p99_ms" : 10.392,
+        "parameter_count" : 2657603,
+        "peak_rss_bytes" : 436289536
+      },
+      "loaded" : {
+        "deadline_misses_per_10000" : 0,
+        "max_ms" : 10.619166,
+        "median_ms" : 9.748583,
+        "p95_ms" : 10.017917,
+        "p999_ms" : 10.508041,
+        "p99_ms" : 10.161042,
+        "parameter_count" : 2657603,
+        "peak_rss_bytes" : 436289536
+      },
+      "look_ahead" : 1,
+      "sample_rate" : 48000
+    }
+  ]
+}

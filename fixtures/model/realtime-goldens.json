@@ -1,0 +1,129 @@
+{
+  "checkpoint_sha256": "6eac4e8cc721f99a22cde7eac3c9f8e2826ced5dc8a4234fd1977de1ec0d3ade",
+  "device": "cpu",
+  "files": [
+    "realtime-goldens.0.safetensors",
+    "realtime-goldens.1.safetensors",
+    "realtime-goldens.2.safetensors",
+    "realtime-goldens.3.safetensors",
+    "realtime-goldens.4.safetensors",
+    "realtime-goldens.5.safetensors"
+  ],
+  "generator": "tools/reference/realtime_goldens.py",
+  "goldens": [
+    {
+      "exit_layer": 4,
+      "look_ahead": 0,
+      "name": "speech-16k-exit4",
+      "online_offline_maximum_difference": 4.246830940246582e-07,
+      "perturbed_rerun": {
+        "difference_snr_db": 59.52,
+        "maximum_difference": 0.0003916863352060318
+      },
+      "sample_rate": 16000
+    },
+    {
+      "exit_layer": 6,
+      "look_ahead": 1,
+      "name": "speech-48k-exit6-ahead1",
+      "online_offline_maximum_difference": 3.296881914138794e-07,
+      "perturbed_rerun": {
+        "difference_snr_db": 54.26,
+        "maximum_difference": 0.0005816668272018433
+      },
+      "sample_rate": 48000
+    },
+    {
+      "exit_layer": 8,
+      "look_ahead": 0,
+      "name": "speech-16k-exit8",
+      "online_offline_maximum_difference": 2.3096799850463867e-07,
+      "perturbed_rerun": {
+        "difference_snr_db": 58.98,
+        "maximum_difference": 0.0005380921065807343
+      },
+      "sample_rate": 16000
+    },
+    {
+      "exit_layer": 12,
+      "look_ahead": 2,
+      "name": "speech-24k-exit12-ahead2",
+      "online_offline_maximum_difference": 2.980232238769531e-07,
+      "perturbed_rerun": {
+        "difference_snr_db": 56.21,
+        "maximum_difference": 0.000402890145778656
+      },
+      "sample_rate": 24000
+    },
+    {
+      "exit_layer": 3,
+      "look_ahead": 0,
+      "name": "speech-8k-exit3",
+      "online_offline_maximum_difference": 3.1851232051849365e-07,
+      "perturbed_rerun": {
+        "difference_snr_db": 60.43,
+        "maximum_difference": 0.00037360191345214844
+      },
+      "sample_rate": 8000
+    }
+  ],
+  "intermediates": {
+    "exit_layer": 12,
+    "frames": 8,
+    "layout": "input: [frame, bin]; every other tensor: [frame, bin, channel]",
+    "look_ahead": 0,
+    "sample_rate": 8000,
+    "tensors": [
+      "intermediates.block0",
+      "intermediates.block1",
+      "intermediates.block10",
+      "intermediates.block11",
+      "intermediates.block2",
+      "intermediates.block3",
+      "intermediates.block4",
+      "intermediates.block5",
+      "intermediates.block6",
+      "intermediates.block7",
+      "intermediates.block8",
+      "intermediates.block9",
+      "intermediates.encoder",
+      "intermediates.input.magnitude",
+      "intermediates.input.phase",
+      "intermediates.magnitude",
+      "intermediates.phase"
+    ]
+  },
+  "mamba": "plain PyTorch substitute for mamba_ssm.Mamba, defined in the generator",
+  "noise_floor": 0.003,
+  "perturbation": 1e-06,
+  "repository": "nvidia/Real-time_RE-USE",
+  "revision": "4c0c186272ca853cd18d832fc5c28777b62f32d1",
+  "shipped_pair": {
+    "difference_snr_db": 42.06,
+    "exit_layer": 8,
+    "input": "noisy_audio/mic_test.wav",
+    "look_ahead": 0,
+    "maximum_difference": 0.0022343695163726807,
+    "online_offline_maximum_difference": 4.4889748096466064e-07,
+    "reference": "enhanced_audio/online_enhanced_mic_test.flac",
+    "reference_bit_depth": 16,
+    "sample_rate": 44100
+  },
+  "speech": {
+    "licence": "http://creativecommons.org/licenses/publicdomain/",
+    "sha256": "641ad9e73d10e7bd928f590381e41ba79e6f3200621792aa0bf4e559ca1b43e8",
+    "start_seconds": 11.0,
+    "url": "https://archive.org/download/short_poetry_001_librivox/because_I_could_not_stop_for_death_dickinson_64kb.mp3"
+  },
+  "torch": "2.15.0",
+  "upstream_sha256": {
+    "config.json": "7c46c3279c4edbb3ae9b190905f90683f8db6ec38dea45da007e87b7d8b5621d",
+    "enhanced_audio/online_enhanced_mic_test.flac": "fe038f9f531b60bf3e15f2660cf4bfc287a0d889e0e99f2ccca6a54203abb08f",
+    "models/stfts.py": "7bd63bb6f4a055fbd7c75e712e47c3c3923c15c969fb1ae6f3c2f2b6c15911a0",
+    "models/streaming_codec_module_time_d1_input_ahead_sep_conv.py": "96b23a9efcb43de06a2b7f08d536e2f12ada940402f1b61a0505347e911470f2",
+    "models/streaming_generator_SEMamba_time_d1_random_layer_ahead_sep_conv.py": "838f8d50ebeedd97d1ad5dc3e43f53591a06d76c78b8e6552cf49f5b17a9405a",
+    "models/streaming_mamba_block2_SEMamba.py": "86026a8b987b33749c3ea3e71bfb83fe81c658ec51eb9392fb5fa814da7b08eb",
+    "noisy_audio/mic_test.wav": "dd54fe1decefe2e5c11c489f3d3d5b0e567bdd840f71bf4007cbe6349194f794",
+    "online_inference.py": "49dc7f57798c0f89f19c6f70ac4835b9e9efd43d02de499f02ed01450c7a6d4f"
+  }
+}

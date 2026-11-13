@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "verified_date": "2026-11-05",
+  "cache_directory": ".cache/eval",
+  "verification_command": "uv run --project tools --locked python -m untunnel_tools.eval.sources --verify",
+  "cache_instructions": "Run the verification command from any directory with the tools project selected. Missing files fail with their exact HTTPS curl command. Create the cache directory before fetching. Artifacts stay ignored and are not redistributed.",
+  "codec": {
+    "executable": "ffmpeg",
+    "version": "9.0.2",
+    "encoder_arguments": [
+      "-c:a",
+      "sbc",
+      "-msbc",
+      "1",
+      "-f",
+      "sbc"
+    ],
+    "sample_rate_hz": 16000,
+    "channels": 1,
+    "samples_per_frame": 120,
+    "bytes_per_frame": 57,
+    "sync_byte_hex": "ad",
+    "test": "tools/tests/test_msbc.py"
+  },
+  "sources": [
+    {
+      "id": "daps",
+      "filename": "daps.tar.gz",
+      "version": "1.0",
+      "url": "https://zenodo.org/api/records/4660670/files/daps.tar.gz/content",
+      "size_bytes": 16055782487,
+      "sha256": "09a215302f73f9305ce0441dc8bf817fc40cc35ebae33e185569aa1a8b29ba26",
+      "publisher_md5": "303c130b7ce2e02b59c7ca5cd595a89c",
+      "license": "CC-BY-NC-4.0",
+      "license_url": "https://zenodo.org/api/records/4660670",
+      "record_url": "https://zenodo.org/records/4660670",
+      "native_sample_rate_hz": 44100,
+      "audio_header_evidence": {
+        "member": "daps/clean/f1_script3_clean.wav",
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 7727727
+      },
+      "usage": "E1 primary corpus and listening-test items; retain attribution and non-commercial terms.",
+      "archive_notes": "Ignore hidden metadata entries when discovering WAV files; some hidden archive members also have a .wav suffix."
+    },
+    {
+      "id": "vctk",
+      "filename": "VCTK-Corpus-0.92.zip",
+      "version": "0.92",
+      "url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/535f4286-e54c-4038-838c-a02285e32cb2/content",
+      "size_bytes": 11747302977,
+      "sha256": "f96258be9fdc2cbff6559541aae7ea4f59df3fcaf5cf963aae5ca647357e359c",
+      "publisher_md5": "8a6ba2946b36fcbef0212cad601f4bfa",
+      "license": "CC-BY-4.0",
+      "license_url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/956a1688-0b59-428c-8a2f-10837433dde3/content",
+      "record_url": "https://datashare.ed.ac.uk/handle/10283/3443",
+      "native_sample_rate_hz": 48000,
+      "sample_rate_evidence_url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/bb7edd96-5d96-4c0e-8989-1e45597e7b72/content",
+      "test_speakers": [
+        "p360",
+        "p361",
+        "p362",
+        "p363",
+        "p364",
+        "p374",
+        "p376",
+        "s5"
+      ],
+      "usage": "E1 comparability set only; represented in RE-USE training data."
+    },
+    {
+      "id": "ap_bwe_code",
+      "filename": "ap-bwe.tar.gz",
+      "version": "751710f22404c27e5bcc983248f8b856a04b8422",
+      "url": "https://codeload.github.com/yxlu-0102/AP-BWE/tar.gz/751710f22404c27e5bcc983248f8b856a04b8422",
+      "sha256": "1364cd42b81cd091c407ee2c803cfef8baa9cf8e58859aa26fed3091fac886d0",
+      "size_bytes": 63931911,
+      "license": "MIT",
+      "license_url": "https://raw.githubusercontent.com/yxlu-0102/AP-BWE/751710f22404c27e5bcc983248f8b856a04b8422/LICENSE",
+      "repository": "https://github.com/yxlu-0102/AP-BWE"
+    },
+    {
+      "id": "ap_bwe_checkpoint",
+      "filename": "ap-bwe-g_16kto48k",
+      "version": "751710f22404c27e5bcc983248f8b856a04b8422",
+      "url": "https://drive.usercontent.google.com/download?id=1HYkD_5ha9GMrjzbTiSFiO1uQQwxXET15&export=download&confirm=t",
+      "size_bytes": 119097961,
+      "sha256": "305a05dcab7dc29ffba09d32692d7a34550fc8fbdf338013641ff5d39a3cb285",
+      "license": "MIT",
+      "license_url": "https://raw.githubusercontent.com/yxlu-0102/AP-BWE/751710f22404c27e5bcc983248f8b856a04b8422/weights_LICENSE.txt",
+      "checkpoint_status": "available",
+      "author_folder_url": "https://drive.google.com/drive/folders/1gBp9HDlSyC9ApqT6moLxTb2MIDI0tJuU",
+      "input_sample_rate_hz": 16000,
+      "output_sample_rate_hz": 48000,
+      "config_source": "ap_bwe_config",
+      "notes": "The version identifies the source commit linking this checkpoint. Google Drive has no immutable revision here; SHA-256 pins the exact checkpoint bytes. The PyTorch ZIP passed all member CRC checks without deserializing the model."
+    },
+    {
+      "id": "ap_bwe_config",
+      "filename": "ap-bwe-config.json",
+      "version": "751710f22404c27e5bcc983248f8b856a04b8422",
+      "url": "https://drive.usercontent.google.com/download?id=1g61-0LAKHJld0KQ1otj986DgV4U7Qe4N&export=download&confirm=t",
+      "size_bytes": 515,
+      "sha256": "d722dcda233d6b00669cc37fa1286d9a49ad8d18082f28c20f895303e706852e",
+      "license": "MIT",
+      "license_url": "https://raw.githubusercontent.com/yxlu-0102/AP-BWE/751710f22404c27e5bcc983248f8b856a04b8422/weights_LICENSE.txt",
+      "input_sample_rate_hz": 16000,
+      "output_sample_rate_hz": 48000
+    },
+    {
+      "id": "webmushra",
+      "filename": "webMUSHRA-1.4.3.zip",
+      "version": "v1.4.3",
+      "url": "https://github.com/audiolabs/webMUSHRA/releases/download/v1.4.3/webMUSHRA-1.4.3.zip",
+      "sha256": "ca7f35417eb2780f5cf7762988e9b0cb99225caac94c1d72062707c96cfea55b",
+      "size_bytes": 5061902,
+      "license": "LicenseRef-Fraunhofer-webMUSHRA",
+      "license_url": "https://raw.githubusercontent.com/audiolabs/webMUSHRA/v1.4.3/LICENSE.txt",
+      "release_url": "https://github.com/audiolabs/webMUSHRA/releases/tag/v1.4.3",
+      "notes": "The licence permits redistribution and use without copyright licence fees, requires the licence and source availability, and grants no patent licence. Review bundled third-party notices before distribution."
+    },
+    {
+      "id": "dnsmos",
+      "filename": "sig_bak_ovr.onnx",
+      "version": "591184a9fcb2cbdec02520fed81a32bbbf9d73ff",
+      "url": "https://raw.githubusercontent.com/microsoft/DNS-Challenge/591184a9fcb2cbdec02520fed81a32bbbf9d73ff/DNSMOS/DNSMOS/sig_bak_ovr.onnx",
+      "sha256": "269fbebdb513aa23cddfbb593542ecc540284a91849ac50516870e1ac78f6edd",
+      "size_bytes": 1157965,
+      "license": "CC-BY-4.0",
+      "license_url": "https://raw.githubusercontent.com/microsoft/DNS-Challenge/591184a9fcb2cbdec02520fed81a32bbbf9d73ff/LICENSE",
+      "code_license": "MIT",
+      "code_license_url": "https://raw.githubusercontent.com/microsoft/DNS-Challenge/591184a9fcb2cbdec02520fed81a32bbbf9d73ff/LICENSE-CODE",
+      "usage": "Local DNSMOS P.835 inference only; do not call a hosted scoring service."
+    },
+    {
+      "id": "deep_filter",
+      "filename": "deep-filter-0.5.6-aarch64-apple-darwin",
+      "version": "0.5.6",
+      "url": "https://github.com/Rikorose/DeepFilterNet/releases/download/v0.5.6/deep-filter-0.5.6-aarch64-apple-darwin",
+      "sha256": "4601e7f4e4c03e59a4c5b5000216ef3add3e808799cfccd95e14e83ea4611081",
+      "size_bytes": 27877081,
+      "license": "MIT OR Apache-2.0",
+      "license_url": "https://raw.githubusercontent.com/Rikorose/DeepFilterNet/v0.5.6/LICENSE",
+      "usage": "Embedded DeepFilterNet3 baseline; run the binary, not the incompatible Python package.",
+      "arguments": [
+        "-D",
+        "-o",
+        "<output-directory>",
+        "<input-48khz.wav>"
+      ]
+    },
+    {
+      "id": "whisper",
+      "filename": "weights.safetensors",
+      "version": "a4aaeec0636e6fef84abdcbe3544cb2bf7e9f6fb",
+      "url": "https://huggingface.co/mlx-community/whisper-large-v3-turbo/resolve/a4aaeec0636e6fef84abdcbe3544cb2bf7e9f6fb/weights.safetensors",
+      "sha256": "951ed3fc1203e6a62467abb2144a96ce7eafca8fa77e3704fdb8635ff3e7f8a6",
+      "size_bytes": 1613977612,
+      "license": "MIT",
+      "license_url": "https://huggingface.co/openai/whisper-large-v3-turbo",
+      "repository": "mlx-community/whisper-large-v3-turbo",
+      "publisher_sha256": "951ed3fc1203e6a62467abb2144a96ce7eafca8fa77e3704fdb8635ff3e7f8a6",
+      "revision_evidence_url": "https://huggingface.co/api/models/mlx-community/whisper-large-v3-turbo/revision/a4aaeec0636e6fef84abdcbe3544cb2bf7e9f6fb?blobs=true",
+      "notes": "Downloaded weight digest also matches the Hugging Face LFS SHA-256. Load this revision locally through mlx-whisper, without remote code."
+    },
+    {
+      "id": "reuse_rs",
+      "filename": "reuse-rs.tar.gz",
+      "version": "88638f3e137848a50d6aca6906530ed2b2b72acc",
+      "url": "https://codeload.github.com/altunenes/re-use-rs/tar.gz/88638f3e137848a50d6aca6906530ed2b2b72acc",
+      "sha256": "8dcb34f627f331168cb9ad28dd32636115eaa4315aaa15bfac2f05a81157ea38",
+      "size_bytes": 81031,
+      "license": "MIT OR Apache-2.0",
+      "license_url": "https://raw.githubusercontent.com/altunenes/re-use-rs/88638f3e137848a50d6aca6906530ed2b2b72acc/Cargo.toml",
+      "package_version": "0.4.0",
+      "bench_source_url": "https://raw.githubusercontent.com/altunenes/re-use-rs/88638f3e137848a50d6aca6906530ed2b2b72acc/examples/bench.rs",
+      "bench_source_sha256": "58446c68ff4ac1c92d0bf40b5ab7d9513a216d4a60c2598287703b980697a450",
+      "bench_arguments": [
+        {
+          "position": 1,
+          "name": "input_wav",
+          "meaning": "Mono input WAV; its sample rate sets the STFT sizes."
+        },
+        {
+          "position": 2,
+          "name": "layers",
+          "default": 8,
+          "meaning": "Number of streaming model layers, not a sample rate."
+        },
+        {
+          "position": 3,
+          "name": "seconds",
+          "default": 12.0,
+          "meaning": "Maximum input duration in seconds, not a layer count or repetition count."
+        },
+        {
+          "position": 4,
+          "name": "model_safetensors",
+          "default": "realtime_reuse/model.safetensors",
+          "meaning": "Streaming checkpoint path."
+        }
+      ],
+      "example_command": "cargo run --release --example bench -- <input.wav> 8 12 <model.safetensors>",
+      "timing_scope": "Times Streaming.step only, excludes STFT and magnitude/phase array preparation, uses look-ahead 0, drops up to five warm-up frames, and reports median, p95 and max. Use default macOS Accelerate build with no GPU feature."
+    },
+    {
+      "id": "reusemic",
+      "filename": "reusemic-0.1.0-macos-universal.zip",
+      "version": "v0.1.0",
+      "url": "https://github.com/tsuzu/reusemic/releases/download/v0.1.0/reusemic-0.1.0-macos-universal.zip",
+      "sha256": "75b87b4d5c9f28fd33d01f861d615cdd9cb56cb093e6f9476a09ee7079d77ce7",
+      "size_bytes": 1519744,
+      "license": "MIT OR Apache-2.0",
+      "license_url": "https://raw.githubusercontent.com/tsuzu/reusemic/v0.1.0/Cargo.toml",
+      "usage": "Installed and measured by hand; downloading this archive does not install it.",
+      "publisher_sha256": "75b87b4d5c9f28fd33d01f861d615cdd9cb56cb093e6f9476a09ee7079d77ce7",
+      "publisher_checksum_url": "https://github.com/tsuzu/reusemic/releases/download/v0.1.0/reusemic-0.1.0-macos-universal.zip.sha256",
+      "model_license": "NSCLv1 for the separately downloaded streaming RE-USE model."
+    },
+    {
+      "id": "hush_ai",
+      "filename": "Hush.AI_1.2.0_aarch64.dmg",
+      "version": "v1.2.0",
+      "url": "https://github.com/alshell7/hush-ai/releases/download/v1.2.0/Hush.AI_1.2.0_aarch64.dmg",
+      "sha256": "d2ba14ab073b054da85bf99b4639ed2f8aa5f6a25b9207551e49434537a4fa43",
+      "size_bytes": 14273322,
+      "license": "Apache-2.0",
+      "license_url": "https://raw.githubusercontent.com/alshell7/hush-ai/v1.2.0/LICENSE",
+      "release_commit": "5fd82dc2bc89858c3902625ee5b5186b948073d1",
+      "usage": "Both engines are installed and measured by hand; downloading this image does not mount or install it."
+    }
+  ]
+}

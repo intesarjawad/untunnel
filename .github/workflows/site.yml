@@ -1,0 +1,50 @@
+name: site
+
+# Publishes site/, which serves install.sh and the test page, with headsets/ built from the
+# issues labelled headset-report:valid. A release calls this workflow, because a release made
+# with the default token does not start other workflows; the weekly run picks up new reports.
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  issues: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+      - run: cp -R site "$RUNNER_TEMP/_site"
+      - name: Build the headset reports page
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --project tools --locked --no-default-groups \
+            python -m untunnel_tools.site.headsets --collect --out "$RUNNER_TEMP/_site/headsets"
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: ${{ runner.temp }}/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

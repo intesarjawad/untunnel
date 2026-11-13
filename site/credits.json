@@ -1,0 +1,32 @@
+{
+    "fonts": [
+        {
+            "name": "League Gothic",
+            "files": ["fonts/league-gothic.woff2"],
+            "source": "https://github.com/theleagueof/league-gothic",
+            "downloaded_from": "https://fonts.google.com/specimen/League+Gothic",
+            "licence": "SIL Open Font License 1.1",
+            "licence_file": "fonts/LICENSE-league-gothic",
+            "attribution": "Copyright 2010 The League Gothic Project Authors"
+        },
+        {
+            "name": "Source Serif 4",
+            "files": ["fonts/source-serif-4.woff2", "fonts/source-serif-4-italic.woff2"],
+            "source": "https://github.com/adobe-fonts/source-serif",
+            "downloaded_from": "https://fonts.google.com/specimen/Source+Serif+4",
+            "licence": "SIL Open Font License 1.1",
+            "licence_file": "fonts/LICENSE-source-serif-4",
+            "attribution": "Copyright 2014 The Source Serif 4 Project Authors"
+        }
+    ],
+    "audio": [
+        {
+            "name": "Because I could not stop for Death, by Emily Dickinson, read for LibriVox",
+            "files": ["clip/headset.flac", "clip/untunnel.flac", "clip/clip.json"],
+            "source": "https://archive.org/download/short_poetry_001_librivox/because_I_could_not_stop_for_death_dickinson_64kb.mp3",
+            "licence": "Public domain",
+            "licence_url": "http://creativecommons.org/licenses/publicdomain/",
+            "derived_by": "uv run --project tools python -m untunnel_tools.site.clip: the mSBC headset simulation, then untunnel enhance --model streaming --bwe 48000"
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; connect-src 'none'; media-src 'self' blob:; img-src 'self' blob: data:"
+        />
+        <meta name="color-scheme" content="light dark" />
+        <meta name="description" content="Find out what your headset microphone sends during a call." />
+        <link rel="icon" href="data:," />
+        <link rel="stylesheet" href="../tokens.css" />
+        <title>Check your call microphone · Untunnel</title>
+        <script src="stop.js" defer></script>
+        <script src="mic-test.js" defer></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+        <header class="site-bar">
+            <a class="site-bar__name" href="../" aria-label="Untunnel, home"><span class="site-bar__s" aria-hidden="true">s</span>Untunnel</a>
+            <nav class="site-bar__nav" aria-label="Sections">
+                <a href="../#how">How it works</a>
+                <a href="./" aria-current="page">Check your microphone</a>
+                <a href="../#install">Install</a>
+                <a href="../#limits">Limits</a>
+                <a href="https://github.com/intesarjawad/untunnel">Source</a>
+            </nav>
+        </header>
+        <main id="main" class="page" data-state="loading">
+            <h1>Check your call microphone</h1>
+            <p class="lede">
+                Record five seconds in this browser and see this take’s measured spectral rolloff.
+                It does not measure a call app’s audio. Nothing is uploaded.
+            </p>
+            <p id="status" class="status" role="status" aria-live="polite">Loading…</p>
+            <div id="panel" class="panel"></div>
+        </main>
+        <noscript>
+            <p class="page">
+                This page needs JavaScript to record audio. You can still install Untunnel from
+                the <a href="../">main page</a>.
+            </p>
+        </noscript>
+    </body>
+</html>

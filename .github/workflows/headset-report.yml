@@ -1,0 +1,54 @@
+name: headset-report
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: headset-report-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: contains(github.event.issue.labels.*.name, 'headset-report')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+      - name: Validate the report block
+        id: validate
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          status=0
+          printf '%s' "$BODY" | uv run --project tools --locked \
+            python -m untunnel_tools.site.headsets --validate 2> "$RUNNER_TEMP/error.txt" || status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+      - name: Mark the issue valid
+        if: steps.validate.outputs.status == '0'
+        run: |
+          gh label create "headset-report:valid" --color 0e8a16 \
+            --description "The report block passed validation" || true
+          gh issue edit "$NUMBER" --add-label "headset-report:valid"
+      - name: Tell the reporter what to fix
+        if: steps.validate.outputs.status != '0'
+        run: |
+          gh issue edit "$NUMBER" --remove-label "headset-report:valid" || true
+          {
+            echo "The report block did not pass validation, so it is not counted yet."
+            echo "Edit the issue text to fix the following; the check runs again on each edit."
+            echo
+            echo '```text'
+            cat "$RUNNER_TEMP/error.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/comment.md"
+          gh issue comment "$NUMBER" --body-file "$RUNNER_TEMP/comment.md"

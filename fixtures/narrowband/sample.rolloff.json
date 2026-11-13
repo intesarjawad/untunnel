@@ -1,0 +1,5 @@
+{
+  "sample_rate_hz": 16000,
+  "duration_seconds": 6.144,
+  "rolloff_40db_hz": 7035
+}

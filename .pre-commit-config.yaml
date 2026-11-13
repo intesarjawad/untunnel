@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: ["--fix"]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: swift-format
+        name: swift-format
+        entry: xcrun swift-format lint --strict -r Sources Tests
+        language: system
+        pass_filenames: false
+        types: [swift]
+      - id: swift-build
+        name: swift-build
+        entry: make build
+        language: system
+        pass_filenames: false
+        types: [swift]
+      - id: pyright
+        name: pyright
+        entry: bash -c "cd tools && uv run pyright"
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: gitleaks
+        name: gitleaks
+        entry: gitleaks git --pre-commit --redact --staged
+        language: system
+        pass_filenames: false

@@ -1,0 +1,131 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swift:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - run: xcrun swift-format lint --strict -r Sources Tests
+      - name: Keep Sources buildable with the Command Line Tools
+        # SwiftUI's @State, @Entry and #Preview macros need Xcode; keep that state in AppState.
+        run: "! grep -rn -E '@State|@Entry|#Preview' Sources"
+      - name: Build with the Command Line Tools only
+        run: swift build -c release --scratch-path .build-clt
+        env:
+          DEVELOPER_DIR: /Library/Developer/CommandLineTools
+      - run: swift build -c release -Xswiftc -warnings-as-errors
+      # The parity suites compare against the publisher's checkpoints, which are fetched from the
+      # publisher at their pinned revisions and never stored here (docs/adr/0010, 0013).
+      - name: Restore the checkpoints the parity fixtures were made with
+        id: checkpoint
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/Library/Application Support/Untunnel/models
+          key: parity-checkpoints-${{ hashFiles('fixtures/model/realtime-goldens.json', 'fixtures/model/offline-goldens.json') }}
+      # The streaming model goes last because a download also makes its model the active one.
+      - name: Download the pinned checkpoints and verify their SHA-256
+        if: steps.checkpoint.outputs.cache-hit != 'true'
+        run: |
+          swift run -c release untunnel download --offline-model
+          swift run -c release untunnel download
+      - name: Fail instead of skipping parity when a checkpoint is not where the suites look
+        run: |
+          for manifest in fixtures/model/realtime-goldens.json fixtures/model/offline-goldens.json; do
+            pinned=$(jq -r '.repository + "@" + .revision' "$manifest")
+            test -f "$HOME/Library/Application Support/Untunnel/models/$pinned/model.safetensors"
+          done
+      # The parity suites run the model on every core for most of the job on a runner without a GPU;
+      # beside them, the tests that wait on real time are not scheduled until their deadlines pass.
+      - run: swift test --parallel --skip Parity
+      - name: Model parity against the publisher's checkpoints
+        run: swift test --parallel --filter Parity
+      - name: Thread Sanitizer on the lock-free ring and the pipeline handoff
+        run: swift test --sanitize=thread --filter "ringBuffer|driftResampler|[pP]ipeline"
+      - name: Engine speed regression gate
+        # Hosted macOS runners are virtual machines, where this tier runs several times over the
+        # budget. There the benchmark only has to finish; on hardware it also has to meet the budget.
+        run: |
+          budget="--assert-p99-ms 20"
+          if [ "$(sysctl -n kern.hv_vmm_present)" = 1 ]; then budget=""; fi
+          swift run -c release untunnel bench --tier 16000:4 --frames 2000 $budget
+
+  tools:
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+          enable-cache: true
+      # The mSBC codec tests shell out to the ffmpeg version recorded in the eval sources.
+      - name: Install the pinned ffmpeg
+        run: |
+          brew install ffmpeg
+          pinned=$(jq -r .codec.version ../fixtures/eval/sources.json)
+          installed=$(ffmpeg -version | awk 'NR==1 {print $3}')
+          test "$installed" = "$pinned"
+      - run: uv sync --all-groups --locked
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run pyright
+      - run: uv run pytest --ignore=tests/test_site_browser.py
+      - run: uv run python -m untunnel_tools.claims
+      - run: uv run playwright install chromium
+      - run: uv run pytest tests/test_site_browser.py
+
+  cold-start:
+    # A fresh runner is a clean machine: install to `ready` must take 60 s or less.
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - run: tools/src/untunnel_tools/bundle.sh --zip
+      - name: Install from the release archive
+        run: |
+          start=$(date +%s)
+          UNTUNNEL_ARTIFACT=dist/Untunnel-arm64.zip sh site/install.sh --yes --timings-json "$RUNNER_TEMP/timings.json"
+          elapsed=$(( $(date +%s) - start ))
+          cat "$RUNNER_TEMP/timings.json"
+          echo "install to ready: ${elapsed} s"
+          # Hosted macOS runners are virtual machines, where the tier benchmark alone runs for
+          # minutes. There the budget covers every other step; on hardware it covers all of them.
+          if [ "$(sysctl -n kern.hv_vmm_present)" = 1 ]; then
+            elapsed=$(jq "$elapsed - (.steps[] | select(.step == 4) | .seconds) | ceil" "$RUNNER_TEMP/timings.json")
+            echo "without the tier benchmark: ${elapsed} s"
+          fi
+          test "$elapsed" -le 60
+      - name: Check the installed model
+        # The virtual microphone is reported, not asserted: the runner's audio stack is unverified.
+        run: |
+          ~/Applications/Untunnel.app/Contents/MacOS/Untunnel doctor --json | tee "$RUNNER_TEMP/doctor.json"
+          jq -e '.model.sha256_ok' "$RUNNER_TEMP/doctor.json"
+
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Lint the install script
+        run: shellcheck site/install.sh
+      - name: Scan the full history for secrets
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/gitleaks.tgz" https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tgz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git --redact --exit-code 1 .

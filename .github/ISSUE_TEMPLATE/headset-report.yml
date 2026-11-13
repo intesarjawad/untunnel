@@ -1,0 +1,22 @@
+name: Headset report
+description: Share how your headset sounds in a call, measured on your own Mac. No audio leaves your Mac.
+title: "Headset report: "
+labels: ["headset-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        1. Wear the headset and run `untunnel doctor --headset-report` in Terminal.
+        2. When Untunnel asks, read the passage aloud for 10 seconds.
+        3. Paste the block the command prints into the box below.
+
+        The block holds your headset's name and IDs, its call-mode sample rates, the tier,
+        the added latency, your macOS build and two numbers measured from the recording.
+        It holds no audio and no personal data beyond the headset name; read it before you paste.
+  - type: textarea
+    id: report
+    attributes:
+      label: Report block
+      description: The whole fenced JSON block, starting at the line with three backticks and `json`.
+    validations:
+      required: true

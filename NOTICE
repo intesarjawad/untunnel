@@ -1,0 +1,21 @@
+This repository contains no model weights or copied NVIDIA Python source files.
+
+The streaming engine is an independent implementation of NVIDIA's
+Real-time RE-USE model. Its weights use the NVIDIA One-Way Noncommercial
+License (NSCLv1) and are described by NVIDIA as research and development only.
+The offline model, NVIDIA-NemotronLabs-RE-USE, uses OpenMDW-1.1.
+Neither model licence is replaced by this repository's MIT code licence.
+
+The engine's Mamba block is an independent implementation of the block described
+in the mamba_ssm project, which is Apache-2.0. No source from that project is
+copied or bundled; the block is written from the equations it publishes.
+
+`fixtures/model` holds reference inputs and outputs for the engine's parity tests and no
+weights. The speech in them is an excerpt of a LibriVox recording dedicated to the public
+domain (archive.org item `short_poetry_001_librivox`); the outputs were computed with the
+Real-time RE-USE weights by `tools/reference/realtime_goldens.py`.
+
+Python evaluation dependencies are development-only. The PESQ wrapper is MIT
+licensed; the bundled ITU-T P.862 reference implementation has separate ITU terms.
+The DeepFilterNet baseline will use the separately downloaded deep-filter binary,
+not the incompatible deepfilternet Python package.
